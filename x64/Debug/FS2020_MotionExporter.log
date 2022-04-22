@@ -1,0 +1,7 @@
+﻿  Main.cpp
+  UDP_Talker.cpp
+  Generating Code...
+SimConnect_debug.lib(SimConnectClient.obj) : warning LNK4099: PDB 'SimConnect_static.pdb' was not found with 'SimConnect_debug.lib(SimConnectClient.obj)' or at 'D:\OneDrive\Desktop\FS2020_MotionExporter-cd7c489180dbb31637c7a17c2cadde4603673044\x64\Debug\SimConnect_static.pdb'; linking object as if no debug info
+SimConnect_debug.lib(commClient.obj) : warning LNK4099: PDB 'SimConnect_static.pdb' was not found with 'SimConnect_debug.lib(commClient.obj)' or at 'D:\OneDrive\Desktop\FS2020_MotionExporter-cd7c489180dbb31637c7a17c2cadde4603673044\x64\Debug\SimConnect_static.pdb'; linking object as if no debug info
+SimConnect_debug.lib(client_proxy.obj) : warning LNK4099: PDB 'SimConnect_static.pdb' was not found with 'SimConnect_debug.lib(client_proxy.obj)' or at 'D:\OneDrive\Desktop\FS2020_MotionExporter-cd7c489180dbb31637c7a17c2cadde4603673044\x64\Debug\SimConnect_static.pdb'; linking object as if no debug info
+  FS2020_MotionExporter.vcxproj -> D:\OneDrive\Desktop\FS2020_MotionExporter-cd7c489180dbb31637c7a17c2cadde4603673044\x64\Debug\FS2020_MotionExporter.exe
