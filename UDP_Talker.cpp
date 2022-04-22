@@ -48,13 +48,13 @@ void UDP_Talker::Talk(double d)
 	string s = to_string(d);
 	Talk(s);
 }
-void UDP_Talker::Talk(vector<double> p_vec)
+void UDP_Talker::Talk(vector<string> vec)
 {
-	string s = "";
+	string temp = "";
 
-	for (double d : p_vec)
+	for (string s : vec)
 	{
-		s.append(to_string(d) + ", ");
+		temp.append(s + ", ");
 	}
-	Talk(s);
+	Talk(temp);
 }

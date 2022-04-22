@@ -18,6 +18,6 @@ public:
 
 	void Talk(string s);
 	void Talk(double d);
-	void Talk(vector<double> p_vec);
+	void Talk(vector<string> vec);
 };
 

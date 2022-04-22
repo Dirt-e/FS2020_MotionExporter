@@ -60,36 +60,36 @@ void CALLBACK ProcessData(SIMCONNECT_RECV* pData, DWORD cbData, void* pContext) 
 		switch (pObjData->dwRequestID)
 		{
 		case REQUEST_MOTIONDATA:
-			vector<double> v_MotionData;
+			vector<string> v_MotionData;
 
-			v_MotionData.push_back(pS->IAS);			//	[0]
-			v_MotionData.push_back(pS->MACH);			//	[1]
-			v_MotionData.push_back(pS->TAS);			//	[2]
-			v_MotionData.push_back(pS->GS);				//	[3]
-			v_MotionData.push_back(pS->AOA);			//	[4]
-			v_MotionData.push_back(pS->VS);				//	[5]
-			v_MotionData.push_back(pS->HGT);			//	[6]
+			v_MotionData.push_back(to_string(pS->IAS));			//	[0]
+			v_MotionData.push_back(to_string(pS->MACH));		//	[1]
+			v_MotionData.push_back(to_string(pS->TAS));			//	[2]
+			v_MotionData.push_back(to_string(pS->GS));			//	[3]
+			v_MotionData.push_back(to_string(pS->AOA));			//	[4]
+			v_MotionData.push_back(to_string(pS->VS));			//	[5]
+			v_MotionData.push_back(to_string(pS->HGT));			//	[6]
 
-			v_MotionData.push_back(-pS->BANK);			//	[7]
-			v_MotionData.push_back(pS->HDG);			//	[8]
-			v_MotionData.push_back(-pS->PITCH);			//	[9]
+			v_MotionData.push_back(to_string(-pS->BANK));		//	[7]
+			v_MotionData.push_back(to_string(pS->HDG));			//	[8]
+			v_MotionData.push_back(to_string(-pS->PITCH));		//	[9]
 
-			v_MotionData.push_back(-pS->WX);				//	[10]
-			v_MotionData.push_back(pS->WY);				//	[11]
-			v_MotionData.push_back(-pS->WZ);				//	[12]
+			v_MotionData.push_back(to_string(-pS->WX));			//	[10]
+			v_MotionData.push_back(to_string(pS->WY));			//	[11]
+			v_MotionData.push_back(to_string(-pS->WZ));			//	[12]
 
-			//Add Gravity
-			double accLonWithGrav =		AddGravityToAccLon	(pS->AX, pS->PITCH);
-			double accVertWithGrav =	AddGravityToAccVert	(pS->AY, pS->PITCH, pS->BANK);
-			double accLatWithGrav =		AddGravityToAccLat	(pS->AZ, pS->PITCH, pS->BANK);
+			//Add Gravity (Caution: Pitch is inverted!!!)
+			double accLonWithGrav =		AddGravityToAccLon	(pS->AX, -pS->PITCH);
+			double accVertWithGrav =	AddGravityToAccVert	(pS->AY, -pS->PITCH, pS->BANK);
+			double accLatWithGrav =		AddGravityToAccLat	(pS->AZ, -pS->PITCH, pS->BANK);
 
-			v_MotionData.push_back(accLonWithGrav);		//	[13]
-			v_MotionData.push_back(accVertWithGrav);	//	[14]
-			v_MotionData.push_back(accLatWithGrav);		//	[15]
+			v_MotionData.push_back(to_string(accLonWithGrav));	//	[13]
+			v_MotionData.push_back(to_string(accVertWithGrav));	//	[14]
+			v_MotionData.push_back(to_string(accLatWithGrav));	//	[15]
 
-			v_MotionData.push_back(pS->TIME);			//	[16]
-			v_MotionData.push_back(Counter++);			//	[17]
-			v_MotionData.push_back(Counter++);			//	[18]
+			v_MotionData.push_back(to_string(pS->TIME));		//	[16]
+			v_MotionData.push_back(to_string(Counter++));		//	[17]
+			v_MotionData.push_back("FS2020");					//	[18]
 
 			//Now send the data via UDP
 			udp_talker.Talk(v_MotionData);

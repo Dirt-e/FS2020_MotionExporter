@@ -6,7 +6,7 @@
 
 double AddGravityToAccLon(double CoordAccLon, double pitch_deg)
 {
-	double pitch_rad = -pitch_deg * deg2rad;		//Minus, because in FS2020 pitch-up has negative values :-/ go figure...
+	double pitch_rad = pitch_deg * deg2rad;
 	double GravityLon = sin(pitch_rad) * Gravity;
 
 	return CoordAccLon + GravityLon;
@@ -14,7 +14,7 @@ double AddGravityToAccLon(double CoordAccLon, double pitch_deg)
 
 double AddGravityToAccVert(double CoordAccVert, double pitch_deg, double roll_deg)
 {
-	double pitch_rad = -pitch_deg * deg2rad;		//Minus, because in FS2020 pitch-up has negative values :-/ go figure...
+	double pitch_rad = pitch_deg * deg2rad;
 	double roll_rad = roll_deg * deg2rad;
 
 	double GravityVert = cos(pitch_rad) * cos(roll_rad) * Gravity;
@@ -24,7 +24,7 @@ double AddGravityToAccVert(double CoordAccVert, double pitch_deg, double roll_de
 
 double AddGravityToAccLat(double CoordAccLat, double pitch_deg, double roll_deg)
 {
-	double pitch_rad = -pitch_deg * deg2rad;		//Minus, because in FS2020 pitch-up has negative values :-/ go figure...
+	double pitch_rad = pitch_deg * deg2rad;
 	double roll_rad = roll_deg * deg2rad;
 
 	double GravityLat = cos(pitch_rad) * sin(roll_rad) * Gravity;
