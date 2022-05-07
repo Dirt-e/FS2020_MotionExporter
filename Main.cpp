@@ -1,8 +1,12 @@
+#pragma warning(disable : 4996)
+
 #include "UDP_Talker.h"
 #include <Windows.h>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <ctime>
 
 #include "SimConnect.h"
 #include "AddGravity.h"
@@ -15,7 +19,9 @@ HANDLE hSimConnect = NULL;
 UDP_Talker udp_talker(31090);
 
 int Counter = 0;
-
+double Time = 0;
+double deltaTime = 0;
+double prevTime = 0;
 
 enum DATA_DEFINE_ID {
 	DEFINITION_MOTIONDATA,
@@ -78,18 +84,26 @@ void CALLBACK ProcessData(SIMCONNECT_RECV* pData, DWORD cbData, void* pContext) 
 			v_MotionData.push_back(to_string(pS->WY));			//	[11]
 			v_MotionData.push_back(to_string(-pS->WZ));			//	[12]
 
+			v_MotionData.push_back(to_string(-pS->WX));			//	[13]
+			v_MotionData.push_back(to_string(pS->WY));			//	[14]
+			v_MotionData.push_back(to_string(-pS->WZ));			//	[15]
+
 			//Add Gravity (Caution: Pitch is inverted!!!)
 			double accLonWithGrav =		AddGravityToAccLon	(pS->AX, -pS->PITCH);
 			double accVertWithGrav =	AddGravityToAccVert	(pS->AY, -pS->PITCH, pS->BANK);
 			double accLatWithGrav =		AddGravityToAccLat	(pS->AZ, -pS->PITCH, pS->BANK);
+			v_MotionData.push_back(to_string(accLonWithGrav));	//	[16]
+			v_MotionData.push_back(to_string(accVertWithGrav));	//	[17]
+			v_MotionData.push_back(to_string(accLatWithGrav));	//	[18]
 
-			v_MotionData.push_back(to_string(accLonWithGrav));	//	[13]
-			v_MotionData.push_back(to_string(accVertWithGrav));	//	[14]
-			v_MotionData.push_back(to_string(accLatWithGrav));	//	[15]
-
-			v_MotionData.push_back(to_string(pS->TIME));		//	[16]
-			v_MotionData.push_back(to_string(Counter++));		//	[17]
-			v_MotionData.push_back("FS2020");					//	[18]
+			//Calculate times:
+			double now = std::chrono::system_clock::now().time_since_epoch().count() / 10000000.0;
+			deltaTime = now - prevTime;
+			prevTime = now;
+			v_MotionData.push_back(to_string(now));				//	[19]
+			v_MotionData.push_back(to_string(deltaTime));		//	[20]
+			v_MotionData.push_back(to_string(Counter++));		//	[21]
+			v_MotionData.push_back("FS2020");					//	[22]
 
 			//Now send the data via UDP
 			udp_talker.Talk(v_MotionData);
