@@ -1,5 +1,3 @@
-#pragma warning(disable : 4996)
-
 #include "UDP_Talker.h"
 #include <Windows.h>
 #include <iostream>
@@ -7,17 +5,21 @@
 #include <vector>
 #include <chrono>
 #include <ctime>
+#include <mutex>
 
 #include "SimConnect.h"
 #include "AddGravity.h"
 
 using namespace std;
 
-bool quit = false;
+//Mutex
+string s = "YAME";
+LPCWSTR mtx = (LPCWSTR)s.c_str();
 
 HANDLE hSimConnect = NULL;
 UDP_Talker udp_talker(31090);
 
+bool quit = false;
 int Counter = 0;
 double Time = 0;
 double deltaTime = 0;
@@ -177,23 +179,31 @@ bool initSimEvents()
 
 int main()
 {
-	cout << "Starting YAME Motion Data Exporter for FS2020" << endl;
+	HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS, 0, mtx);			// Try to open the mutex.
 
-	while (true)
+	if (!hMutex)													//Mutex doesn't exist --> We are the only instance
 	{
-		cout << "Waiting for Connection...";
+		hMutex = CreateMutex(0, 0, mtx);
+		cout << "Starting YAME Motion Data Exporter for FS2020" << endl;
+		cout << "Version: v0.02" << endl << endl;
 
-		while (!SUCCEEDED(SimConnect_Open(&hSimConnect, "Client Event Demo", NULL, 0, NULL, 0)))
+		while (true)
 		{
-			cout << '.';
-			Sleep(300);
+			cout << "Waiting for Connection...";
+
+			while (!SUCCEEDED(SimConnect_Open(&hSimConnect, "Client Event Demo", NULL, 0, NULL, 0)))
+			{
+				cout << '.';
+				Sleep(300);
+			}
+
+			cout << endl << "Connected to FS2020 :-)" << endl << endl;
+
+			initSimEvents();
 		}
-
-		cout << endl << endl << "Connected to FS2020 :-)" << endl << endl;
-
-		initSimEvents();
 	}
-
-	cin.get();
-	return 0;
+	else
+	{
+		return 0;													// The mutex exists so this is the second instance
+	}
 }
