@@ -49,11 +49,15 @@ struct SimResponse {
 	double WY;					//	[11]												
 	double WZ;					//	[12]
 
-	double AX;					//	[13]											
-	double AY;					//	[14]												
-	double AZ;					//	[15]
+	double WX_dot;				//	[13]												
+	double WY_dot;				//	[14]												
+	double WZ_dot;				//	[15]
 
-	double TIME;				//	[16]	
+	double AX;					//	[16]											
+	double AY;					//	[17]												
+	double AZ;					//	[18]
+
+	//double TIME;				//	[19]	Not Used!
 };
 
 void CALLBACK ProcessData(SIMCONNECT_RECV* pData, DWORD cbData, void* pContext) {
@@ -84,9 +88,9 @@ void CALLBACK ProcessData(SIMCONNECT_RECV* pData, DWORD cbData, void* pContext) 
 			v_MotionData.push_back(to_string(pS->WY));			//	[11]
 			v_MotionData.push_back(to_string(-pS->WZ));			//	[12]
 
-			v_MotionData.push_back(to_string(-pS->WX));			//	[13]
-			v_MotionData.push_back(to_string(pS->WY));			//	[14]
-			v_MotionData.push_back(to_string(-pS->WZ));			//	[15]
+			v_MotionData.push_back(to_string(-pS->WX_dot));		//	[13]
+			v_MotionData.push_back(to_string(pS->WY_dot));		//	[14]
+			v_MotionData.push_back(to_string(-pS->WZ_dot));		//	[15]
 
 			//Add Gravity (Caution: Pitch is inverted!!!)
 			double accLonWithGrav =		AddGravityToAccLon	(pS->AX, -pS->PITCH);
@@ -127,27 +131,31 @@ void CALLBACK ProcessData(SIMCONNECT_RECV* pData, DWORD cbData, void* pContext) 
 bool initSimEvents()
 {
 	// DATA
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "AIRSPEED INDICATED", "meter per second");			//[0]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "AIRSPEED MACH", "MACH");							//[1]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "AIRSPEED TRUE", "meter per second");				//[2]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "GROUND VELOCITY", "meter per second");				//[3]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "INCIDENCE ALPHA", "degree");						//[4]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "VERTICAL SPEED", "meter per second");				//[5]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "RADIO HEIGHT", "meter");							//[6]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "AIRSPEED INDICATED", "meter per second");						//[0]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "AIRSPEED MACH", "MACH");										//[1]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "AIRSPEED TRUE", "meter per second");							//[2]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "GROUND VELOCITY", "meter per second");							//[3]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "INCIDENCE ALPHA", "degree");									//[4]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "VERTICAL SPEED", "meter per second");							//[5]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "RADIO HEIGHT", "meter");										//[6]
 
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "PLANE BANK DEGREES", "degree");						//[7]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "PLANE HEADING DEGREES TRUE", "degree");				//[8]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "PLANE PITCH DEGREES", "degree");					//[9]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "PLANE BANK DEGREES", "degree");									//[7]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "PLANE HEADING DEGREES TRUE", "degree");							//[8]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "PLANE PITCH DEGREES", "degree");								//[9]
 
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ROTATION VELOCITY BODY Z", "degree per second");	//[10]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ROTATION VELOCITY BODY Y", "degree per second");	//[11]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ROTATION VELOCITY BODY X", "degree per second");	//[12]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ROTATION VELOCITY BODY Z", "degree per second");				//[10]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ROTATION VELOCITY BODY Y", "degree per second");				//[11]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ROTATION VELOCITY BODY X", "degree per second");				//[12]
 
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ACCELERATION BODY Z", "meter per second squared");	//[13]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ACCELERATION BODY Y", "meter per second squared");	//[14]
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ACCELERATION BODY X", "meter per second squared");	//[15]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ROTATION ACCELERATION BODY Z", "degree per second squared");	//[13]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ROTATION ACCELERATION BODY Y", "degree per second squared");	//[14]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ROTATION ACCELERATION BODY X", "degree per second squared");	//[15]
 
-	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ZULU TIME", "second");								//[16]	Time
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ACCELERATION BODY Z", "meter per second squared");				//[16]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ACCELERATION BODY Y", "meter per second squared");				//[17]
+	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ACCELERATION BODY X", "meter per second squared");				//[18]
+
+	//SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "ZULU TIME", "second");										//[19]	Not Used!
 
 
 	SimConnect_RequestDataOnSimObject(hSimConnect, REQUEST_MOTIONDATA, DEFINITION_MOTIONDATA, SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME);
