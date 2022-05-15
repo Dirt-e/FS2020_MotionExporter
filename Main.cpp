@@ -121,7 +121,7 @@ void CALLBACK ProcessData(SIMCONNECT_RECV* pData, DWORD cbData, void* pContext) 
 
 	case SIMCONNECT_RECV_ID_QUIT:
 	{
-		quit = 1;
+		quit = true;
 		break;
 	}
 
@@ -204,6 +204,6 @@ int main()
 	}
 	else
 	{
-		return 0;													// The mutex exists so this is the second instance
+		return 0;													// The mutex exists so this is the second instance --> Close the application
 	}
 }
