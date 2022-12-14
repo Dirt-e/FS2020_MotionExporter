@@ -9,6 +9,7 @@
 
 #include "SimConnect.h"
 #include "AddGravity.h"
+#include "ManageConsoleWindow.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ HANDLE hSimConnect = NULL;
 UDP_Talker udp_talker(31090);
 
 bool quit = false;
+bool verbose = false;
 int Counter = 0;
 double Time = 0;
 double deltaTime = 0;
@@ -130,7 +132,7 @@ void CALLBACK ProcessData(SIMCONNECT_RECV* pData, DWORD cbData, void* pContext) 
 	}
 }
 
-bool initSimEvents()
+bool GetData_Loop()
 {
 	// DATA
 	SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_MOTIONDATA, "AIRSPEED INDICATED", "meter per second");						//[0]
@@ -171,7 +173,6 @@ bool initSimEvents()
 	}
 
 	SimConnect_Close(hSimConnect);
-	cout << endl << "FS2020 closed :-(" << endl << endl;
 
 	quit = false;
 	return true;
@@ -179,28 +180,37 @@ bool initSimEvents()
 
 int main()
 {
+#if defined(_DEBUG)
+	ShowConsoleWindow(true);
+	cout << "Running in debug mode" << endl;
+#else
+	ShowConsoleWindow(false);
+#endif
+
 	HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS, 0, mtx);			// Try to open the mutex.
 
 	if (!hMutex)													//Mutex doesn't exist --> We are the only instance
 	{
 		hMutex = CreateMutex(0, 0, mtx);
+#if defined(_DEBUG)
 		cout << "Starting YAME Motion Data Exporter for FS2020" << endl;
 		cout << "Version: v0.02" << endl << endl;
 
-		while (true)
+		
+		cout << "Waiting for Connection...";
+#endif
+		while (!SUCCEEDED(SimConnect_Open(&hSimConnect, "YAME Motion Exporter", NULL, 0, NULL, 0)))
 		{
-			cout << "Waiting for Connection...";
-
-			while (!SUCCEEDED(SimConnect_Open(&hSimConnect, "Client Event Demo", NULL, 0, NULL, 0)))
-			{
-				cout << '.';
-				Sleep(300);
-			}
-
-			cout << endl << "Connected to FS2020 :-)" << endl << endl;
-
-			initSimEvents();
+			cout << '.';
+			Sleep(300);
 		}
+#if defined(_DEBUG)
+		cout << endl << "Connected to FS2020 :-)" << endl << endl;
+#endif
+		GetData_Loop();
+
+		return 0;													//Stop Application
+		
 	}
 	else
 	{

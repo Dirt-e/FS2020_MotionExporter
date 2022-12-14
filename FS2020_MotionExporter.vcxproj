@@ -146,10 +146,12 @@
   <ItemGroup>
     <ClCompile Include="AddGravity.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ManageConsoleWindow.cpp" />
     <ClCompile Include="UDP_Talker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddGravity.h" />
+    <ClInclude Include="ManageConsoleWindow.h" />
     <ClInclude Include="UDP_Talker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
