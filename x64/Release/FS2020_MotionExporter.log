@@ -1,8 +1,7 @@
-﻿  Main.cpp
-  Generating code
-  4 of 203 functions ( 2.0%) were compiled, the rest were copied from previous compilation.
+﻿  Generating code
+  0 of 203 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 SimConnect.lib(SimConnectClient.obj) : warning LNK4099: PDB 'SimConnect_static.pdb' was not found with 'SimConnect.lib(SimConnectClient.obj)' or at 'D:\OneDrive\Frank - PC\GitHub\FS2020_MotionExporter\x64\Release\SimConnect_static.pdb'; linking object as if no debug info
 SimConnect.lib(commClient.obj) : warning LNK4099: PDB 'SimConnect_static.pdb' was not found with 'SimConnect.lib(commClient.obj)' or at 'D:\OneDrive\Frank - PC\GitHub\FS2020_MotionExporter\x64\Release\SimConnect_static.pdb'; linking object as if no debug info
